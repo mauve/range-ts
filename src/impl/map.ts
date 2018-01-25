@@ -1,5 +1,7 @@
+import { Projection } from "../range";
+
 class MapIterator<T, U> implements Iterator<U> {
-    constructor(private underlying: Iterator<T>, private project: (v: T) => U) { }
+    constructor(private underlying: Iterator<T>, private project: Projection<T, U>) { }
 
     next(value?: any): IteratorResult<U> {
         let result = this.underlying.next();
@@ -16,7 +18,7 @@ class MapIterator<T, U> implements Iterator<U> {
 
 export class Map<T, U> implements Iterable<U> {
 
-    constructor(private underlying: Iterable<T>, private project: (v: T) => U) { }
+    constructor(private underlying: Iterable<T>, private project: Projection<T, U>) { }
 
     [Symbol.iterator](): Iterator<U> {
         return new MapIterator(this.underlying[Symbol.iterator](), this.project);

@@ -16,7 +16,8 @@ class ConcatenateIterator<T> implements Iterator<T> {
 
         let result = this.current.value.next();
         if (result.done) {
-            return this.next(value);
+            this.current = this.iter.next();
+            return this.next();
         }
 
         return result;

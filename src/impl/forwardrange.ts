@@ -1,33 +1,34 @@
-import { ForwardRange } from '../range';
+import { ForwardRange, Predicate, Projection } from '../range';
 import { Skip } from './skip';
 import { Take } from './take';
 import { Where } from './where';
-import { While } from './while';
+import { TakeWhile } from './take_while';
 import { Map } from './map';
 import { Concatenate } from './concatenate';
 import { Zip } from './zip';
+import { SkipWhile } from './skip_while';
 
 
 export class ForwardRangeImpl<T> implements ForwardRange<T> {
     constructor(private iterable: Iterable<T>) { }
 
-    skip(count: number): ForwardRange<T> {
-        return new ForwardRangeImpl<T>(new Skip<T>(this.iterable, count));
+    skip(countOrPredicate: number | Predicate<T>): ForwardRange<T> {
+        if (typeof countOrPredicate === "number")
+            return new ForwardRangeImpl<T>(new Skip<T>(this.iterable, countOrPredicate));
+        return new ForwardRangeImpl<T>(new SkipWhile<T>(this.iterable, countOrPredicate));
     }
 
-    take(count: number): ForwardRange<T> {
-        return new ForwardRangeImpl<T>(new Take<T>(this.iterable, count));
+    take(countOrPredicate: number | Predicate<T>): ForwardRange<T> {
+        if (typeof countOrPredicate === "number")
+            return new ForwardRangeImpl<T>(new Take<T>(this.iterable, countOrPredicate));
+        return new ForwardRangeImpl<T>(new TakeWhile<T>(this.iterable, countOrPredicate));
     }
 
-    where(predicate: (v: T) => boolean): ForwardRange<T> {
+    where(predicate: Predicate<T>): ForwardRange<T> {
         return new ForwardRangeImpl<T>(new Where<T>(this.iterable, predicate));
     }
 
-    while(predicate: (v: T) => boolean): ForwardRange<T> {
-        return new ForwardRangeImpl<T>(new While<T>(this.iterable, predicate));
-    }
-
-    map<U>(project: (v: T) => U): ForwardRange<U> {
+    map<U>(project: Projection<T, U>): ForwardRange<U> {
         return new ForwardRangeImpl<U>(new Map<T, U>(this.iterable, project));
     }
 

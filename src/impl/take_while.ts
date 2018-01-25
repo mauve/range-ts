@@ -1,4 +1,4 @@
-class WhileIterator<T> implements Iterator<T> {
+class TakeWhileIterator<T> implements Iterator<T> {
     done = false;
 
     constructor(private underlying: Iterator<T>, private predicate: (v: T) => boolean) { }
@@ -31,11 +31,11 @@ class WhileIterator<T> implements Iterator<T> {
     }
 }
 
-export class While<T> implements Iterable<T> {
+export class TakeWhile<T> implements Iterable<T> {
 
     constructor(private underlying: Iterable<T>, private predicate: (v: T) => boolean) { }
 
     [Symbol.iterator](): Iterator<T> {
-        return new WhileIterator(this.underlying[Symbol.iterator](), this.predicate);
+        return new TakeWhileIterator(this.underlying[Symbol.iterator](), this.predicate);
     }
 }

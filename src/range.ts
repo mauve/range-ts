@@ -1,16 +1,27 @@
 import { ForwardRangeImpl } from "./impl/forwardrange";
+import { Concatenate } from "./impl/concatenate";
+
+export type Predicate<T> = (v: T) => boolean;
+export type Projection<T, U> = (v: T) => U;
 
 export interface ForwardRange<T> extends Iterable<T> {
-    skip(count: number): ForwardRange<T>;
-    take(count: number): ForwardRange<T>;
-    where(predicate: (v: T) => boolean): ForwardRange<T>;
-    while(predicate: (v: T) => boolean): ForwardRange<T>;
-    map<U>(project: (v: T) => U): ForwardRange<U>;
+    skip(countOrPredicate: number | Predicate<T>): ForwardRange<T>;
+    take(countOrPredicate: number | Predicate<T>): ForwardRange<T>;
+    where(predicate: Predicate<T>): ForwardRange<T>;
+    map<U>(project: Projection<T, U>): ForwardRange<U>;
     prepend(r: ForwardRange<T>): ForwardRange<T>;
     append(r: ForwardRange<T>): ForwardRange<T>;
     zip(r: ForwardRange<T>): ForwardRange<T>;
 }
 
-export function forward_range<T>(iter: Iterable<T>): ForwardRange<T> {
-    return new ForwardRangeImpl(iter);
+export function forward_range<T>(...iters: Iterable<T>[]): ForwardRange<T> {
+    if (iters.length > 1) {
+        return new ForwardRangeImpl<T>(new Concatenate<T>(iters));
+    }
+
+    if (iters.length === 1) {
+        return new ForwardRangeImpl(iters[0]);
+    }
+
+    return new ForwardRangeImpl<T>([]);
 }

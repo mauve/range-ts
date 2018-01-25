@@ -15,16 +15,19 @@ import { forward_range } from './range.ts';
 let r = forward_range([0, 1, 2, 3, 1, 1]);
 
 r.skip(1);
-// returns a ForwardRange which equals [1, 2, 3]
+// returns a ForwardRange which equals [1, 2, 3, 1, 1]
+
+r.skip((v) => v < 3)
+// returns a ForwardRange which equals [3, 1, 1]
 
 r.take(2);
 // returns a ForwardRange which equals [0, 1]
 
+r.take((v) => v < 2)
+// returns a ForwardRange which equals [0, 1]
+
 r.where((v) => v < 2);
 // returns a ForwardRange which equals [0, 1, 1, 1]
-
-r.while((v) => v < 2);
-// returns a ForwardRange which equals [0, 1]
 
 r.map((v) => v * 2);
 // returns a ForwardRange which equals [0, 2, 4, 6, 2, 2]

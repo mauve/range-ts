@@ -21,4 +21,40 @@ describe('ForwardRangeImpl', () => {
 
         expect(result).to.deep.equal([1, 2]);
     });
+
+    it('skip by count', () => {
+        let array = [0, 1, 2];
+
+        let r = new ForwardRangeImpl(array);
+        let result = [...r.skip(1)];
+
+        expect(result).to.deep.equal([1, 2]);
+    });
+
+    it('skip by predicate', () => {
+        let array = [0, 1, 2];
+
+        let r = new ForwardRangeImpl(array);
+        let result = [...r.skip((v) => true)];
+
+        expect(result).to.deep.equal([]);
+    });
+
+    it('take by count', () => {
+        let array = [0, 1, 2];
+
+        let r = new ForwardRangeImpl(array);
+        let result = [...r.take(1)];
+
+        expect(result).to.deep.equal([0]);
+    });
+
+    it('take by predicate', () => {
+        let array = [0, 1, 2];
+
+        let r = new ForwardRangeImpl(array);
+        let result = [...r.take((v) => true)];
+
+        expect(result).to.deep.equal([0, 1, 2]);
+    });
 });
