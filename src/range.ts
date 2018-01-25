@@ -9,9 +9,9 @@ export interface ForwardRange<T> extends Iterable<T> {
     take(countOrPredicate: number | Predicate<T>): ForwardRange<T>;
     where(predicate: Predicate<T>): ForwardRange<T>;
     map<U>(project: Projection<T, U>): ForwardRange<U>;
-    prepend(r: ForwardRange<T>): ForwardRange<T>;
-    append(r: ForwardRange<T>): ForwardRange<T>;
-    zip(r: ForwardRange<T>): ForwardRange<T>;
+    prepend(...ranges: ForwardRange<T>[]): ForwardRange<T>;
+    append(...ranges: ForwardRange<T>[]): ForwardRange<T>;
+    zip(...ranges: ForwardRange<T>[]): ForwardRange<T>;
 }
 
 export function forward_range<T>(...iters: Iterable<T>[]): ForwardRange<T> {

@@ -32,16 +32,22 @@ export class ForwardRangeImpl<T> implements ForwardRange<T> {
         return new ForwardRangeImpl<U>(new Map<T, U>(this.iterable, project));
     }
 
-    prepend(r: ForwardRange<T>): ForwardRange<T> {
-        return new ForwardRangeImpl<T>(new Concatenate<T>([r, this.iterable]));
+    prepend(...ranges: ForwardRange<T>[]): ForwardRange<T> {
+        if (ranges.length === 0)
+            return this;
+        return new ForwardRangeImpl<T>(new Concatenate<T>([...ranges, this.iterable]));
     }
 
-    append(r: ForwardRange<T>): ForwardRange<T> {
-        return new ForwardRangeImpl<T>(new Concatenate<T>([this.iterable, r]));
+    append(...ranges: ForwardRange<T>[]): ForwardRange<T> {
+        if (ranges.length === 0)
+            return this;
+        return new ForwardRangeImpl<T>(new Concatenate<T>([this.iterable, ...ranges]));
     }
 
-    zip(r: ForwardRange<T>): ForwardRange<T> {
-        return new ForwardRangeImpl<T>(new Zip<T>([this.iterable, r]));
+    zip(...ranges: ForwardRange<T>[]): ForwardRange<T> {
+        if (ranges.length === 0)
+            return this;
+        return new ForwardRangeImpl<T>(new Zip<T>([this.iterable, ...ranges]));
     }
 
     [Symbol.iterator](): Iterator<T> {
